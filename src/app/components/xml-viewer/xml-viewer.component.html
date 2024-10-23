@@ -1,0 +1,54 @@
+<!-- xml-viewer.component.html -->
+<div class="xml-viewer-container mat-elevation-z8">
+  <mat-form-field class="filter-field">
+    <mat-label>Filter</mat-label>
+    <input matInput [formControl]="searchControl" placeholder="Suchen..." />
+  </mat-form-field>
+
+  <table mat-table [dataSource]="customDataSource">
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>
+        <span [style.paddingLeft.px]="40">Name</span>
+      </th>
+      <td mat-cell *matCellDef="let node">
+        <div [style.padding-left.px]="node.level * 32" class="node-content">
+          <button
+            *ngIf="hasChildren(node)"
+            mat-icon-button
+            class="toggle-button"
+            (click)="toggleNode(node); $event.stopPropagation()"
+          >
+            <mat-icon>
+              {{ isExpanded(node) ? "expand_more" : "chevron_right" }}
+            </mat-icon>
+          </button>
+          <span *ngIf="!hasChildren(node)" class="node-spacer"></span>
+          <span [class.highlight]="isHighlighted(node.name)" class="node-name">
+            {{ node.name }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+
+    <!-- Value Column -->
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef>Wert</th>
+      <td mat-cell *matCellDef="let node">
+        <span [class.highlight]="isHighlighted(node.value)">{{
+          node.value
+        }}</span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    [showFirstLastButtons]="true"
+  >
+  </mat-paginator>
+</div>
